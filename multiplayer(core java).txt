@@ -1,0 +1,245 @@
+core java song operation
+
+1)multi player
+
+package Song;
+
+import java.util.Scanner;
+
+public class MultiPlayer {
+	
+	static SongOperation songOperation = new SongOperation();
+
+	public static void main(String[] args) {
+		boolean Loop=true;
+		while(Loop) {
+		System.out.println("Hello.\nPlease press 1 to play songs.\nPress 2 to add a song.\nPress 3 to update a song.\n"
+				+ "Press 4 to remove a song. \nPress 5 to see your playlist. \nPress 6 to stop the app. ");
+		Scanner sc = new Scanner(System.in);
+		int z = sc.nextInt();
+		switch (z) {
+		case 1:
+			songOperation.chooseSongToPlay();
+			break;
+			
+		case 2:
+			songOperation.addSongs();
+			break;
+			
+		case 3:
+			songOperation.updateSong();
+			break;
+			
+		case 4:
+			songOperation.removeSong();
+			break;
+			
+		case 5:
+			songOperation.showAllSongs();
+			break;
+			
+		case 6:
+			System.out.println("quiting.....");
+			Loop=false;
+			break;
+
+		default:
+			System.out.println("Enter a valid option.");
+			break;
+		}
+		}
+	}
+}
+
+2)Songs
+package Song;
+
+
+
+public class Song {
+
+	private int ID;
+	private String songName;
+	private String movieName;
+	private String singerName;
+	private String Composer;
+	private String Lyriscist;
+	private double Length;
+	
+	public int getID() {
+		return ID;
+	}
+	public void setID(int iD) {
+		ID = iD;
+	}
+	public String getSongName() {
+		return songName;
+	}
+	public void setSongName(String songName) {
+		this.songName = songName;
+	}
+	public String getMovieName() {
+		return movieName;
+	}
+	public void setMovieName(String movieName) {
+		this.movieName = movieName;
+	}
+	public String getSingerName() {
+		return singerName;
+	}
+	public void setSingerName(String singerName) {
+		this.singerName = singerName;
+	}
+	public String getComposer() {
+		return Composer;
+	}
+	public void setComposer(String composer) {
+		Composer = composer;
+	}
+	public String getLyriscist() {
+		return Lyriscist;
+	}
+	public void setLyriscist(String lyriscist) {
+		Lyriscist = lyriscist;
+	}
+	public double getLength() {
+		return Length;
+	}
+	public void setLength(double length) {
+		Length = length;
+	}
+	@Override
+	public String toString() {
+		return "Song [ID=" + ID + ", songName=" + songName + ", movieName=" + movieName + ", singerName=" + singerName
+				+ ", Composer=" + Composer + ", Lyriscist=" + Lyriscist + ", Length=" + Length + "]";
+	}
+
+}
+
+3)SongOperation
+package Song;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class SongOperation {
+
+	static ArrayList<Song> arrayList = new ArrayList<Song>();
+	static Scanner scanner = new Scanner(System.in);
+	static Song song;
+
+	public void chooseSongToPlay() {
+		if (arrayList.isEmpty()) {
+			System.out.println("There are no songs in the playlist. Please add a song to play.");
+		} else {
+			System.out.println(
+					"Press 1 to play a specific song.\n Press 2 to play all the songs.\n Press 3 to play a random song.");
+			int input1 = scanner.nextInt();
+
+			switch (input1) {
+			case 1:
+				showAllSongs();
+				System.out.println("Enter the id of the song to play that song.");
+				int input3 = scanner.nextInt();
+				for (int j = 0; j < arrayList.size(); j++) {
+					if (arrayList.get(j).getID() == input3) {
+						System.out.println(arrayList.get(j).getSongName() + " is now playing..");
+					}
+				}
+
+				break;
+
+			case 2:
+				for (int i = 0; i < arrayList.size(); i++) {
+					System.out.println(arrayList.get(i).getSongName() + " is now playing....");
+				}
+				break;
+
+			case 3:
+				int max = arrayList.size();
+				int min = 0;
+				int random = (int) (Math.random() * (max - min + 1) + min);
+				System.out.println(arrayList.get(random).getSongName() + " is now playing...");
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
+	public void addSongs() {
+		System.out.println("Plaese enter the number of songs you wish to add.");
+		int no = scanner.nextInt();
+		for (int i = 0; i < no; i++) {
+			song = new Song();
+			System.out.println("Enter the song ID");
+			song.setID(scanner.nextInt());
+			System.out.println("Enter the song name");
+			song.setSongName(scanner.next());
+			System.out.println("Enter the song's movie name");
+			song.setMovieName(scanner.nextLine());
+			System.out.println("Enter the song's singer name");
+			song.setSingerName(scanner.nextLine());
+			System.out.println("Enter the song's composer name");
+			song.setComposer(scanner.nextLine());
+			System.out.println("Enter the song's lyriscist name");
+			song.setLyriscist(scanner.nextLine());
+			System.out.println("Enter the song's duration");
+			song.setLength(scanner.nextDouble());
+
+			arrayList.add(song);
+			System.out.println("You have successfully added the song.");
+
+		}
+	}
+
+	public void removeSong() {
+		System.out.println("Pleses select a song from below to delete. Press the id.");
+		showAllSongs();
+		int r = scanner.nextInt();
+		for (int j = 0; j < arrayList.size(); j++) {
+			if (arrayList.get(j).getID() == r) {
+				arrayList.remove(j);
+				System.out.println("Song removed.");
+			}
+		}
+	}
+
+	public void updateSong() {
+		System.out.println("Pleses select a song from below to update. Press the id.");
+		showAllSongs();
+		int u = scanner.nextInt();
+		for (int i = 0; i < arrayList.size(); i++) {
+			if (arrayList.get(i).getID() == u) {
+				System.out.println("Enter the song ID.");
+				arrayList.get(i).setID(scanner.nextInt());
+				System.out.println("Enter the song name.");
+				arrayList.get(i).setSongName(scanner.next());
+				System.out.println("Enter the singer name.");
+				arrayList.get(i).setSingerName(scanner.nextLine());
+				System.out.println("Enter the movie name");
+				arrayList.get(i).setMovieName(scanner.nextLine());
+				System.out.println("Enter the composer name.");
+				arrayList.get(i).setComposer(scanner.nextLine());
+				System.out.println("Enter the lyriscist name");
+				arrayList.get(i).setLyriscist(scanner.nextLine());
+				System.out.println("Enter the song length.");
+				arrayList.get(i).setLength(scanner.nextDouble());
+
+				System.out.println(arrayList.get(i) + " \nSong successfully updated.");
+			}
+		}
+	}
+
+	public void showAllSongs() {
+		if (arrayList.isEmpty()) {
+			System.out.println("There are no songs in the playlist. Please add a song.");
+		} else
+			System.out.println("These songs are present in your playlist.");
+		for (int i = 0; i < arrayList.size(); i++) {
+			System.out.println(arrayList.get(i));
+		}
+	}
+
+}

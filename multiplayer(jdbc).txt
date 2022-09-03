@@ -1,0 +1,427 @@
+
+
+//////////////////////////////////////////////////////////////
+Advance java song operation
+/////////////////////////////////////////////////////////////
+
+1) register song
+
+package d;
+
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Properties;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
+public class Registration {
+
+	static Connection con;
+	//static Statement st;
+	static PreparedStatement pre;
+	static int rsi;
+	static ResultSet rs;
+	static String query;
+	static FileReader filereader;
+	static Properties properties=new Properties();
+	static Scanner sc=new Scanner(System.in) ;
+	static int a;
+	static song_properti call=new song_properti();
+static song_properti obj;
+public static void connect() {
+	try {
+		filereader=new FileReader("C:\\Users\\dhanuu\\eclipse-workspace\\WCCA11_JAVA\\d\\Path\\link.properties");
+		properties.load(filereader);
+		Class.forName(properties.getProperty("driver"));
+		con=DriverManager.getConnection(properties.getProperty("dbpath"),properties.getProperty("user"),properties.getProperty("pass"));
+		JOptionPane.showMessageDialog(null, " connect database");
+		
+	}
+	catch(Exception e)
+	{
+				JOptionPane.showMessageDialog(null, "Un-success to connect database");
+
+	}
+}
+	public static void main(String[] args) {
+try {
+			
+			connect();
+			query=properties.getProperty("delete_song");
+			pre=con.prepareStatement(query);
+			rsi=pre.executeUpdate();
+		
+            System.out.println("qurry ok ("+rsi+") rawos affected");
+            System.err.println("database create sucess");
+			query=properties.getProperty("create_database_of_song");
+			pre=con.prepareStatement(query);
+			rsi=pre.executeUpdate(query);
+			query=" ";
+			query="insert into song_0 values(?,?,?,?,?,?)";
+			try {
+			for(int i=1;i<=5;i++)
+			{
+				System.out.println("enter songid ");
+				pre=con.prepareStatement(query);
+				pre.setInt(1,sc.nextInt());
+				System.out.println("enter songname ");
+				pre.setString(2,sc.nextLine());//here i use one time user input (1)
+				pre.setString(2,sc.nextLine());//here i use two time user input (2)
+				System.out.println("enter singername ");
+				pre.setString(3,sc.nextLine());
+				System.out.println("enter moviename ");
+				pre.setString(4,sc.nextLine());
+				System.out.println("enter composername ");
+				pre.setString(5,sc.nextLine());
+				System.out.println("enter songlength ");
+				pre.setFloat(6,sc.nextFloat());
+				rsi=pre.executeUpdate();
+				System.out.println("query ok ("+rsi+") row affect");
+			}
+			}
+				catch(Exception e) {
+					System.out.println(e);
+				}
+			rsi=0;
+			try {
+			query=" ";
+			query="select * from song_0";
+			pre=con.prepareStatement(query);
+			rs=pre.executeQuery(query);
+			
+		
+			while(rs.next())
+			{
+				System.out.println("|"+rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3)+"|"+rs.getString(4)+"|"+rs.getString(5)+"|"+rs.getString(6)+"|");
+				
+			}
+			
+			System.out.println("Press (1) to Operate That Song's");
+			rsi=sc.nextInt();
+			if(rsi==1)
+			{
+				Registration obj=new Registration();
+				obj.choose();
+			}
+			else {
+				System.out.println("Press (1) to Operate That Song's");
+				rsi=sc.nextInt();
+				if(rsi==1)
+				{
+					Registration obj=new Registration();
+					obj.choose();
+				}
+			}
+			}
+			catch(Exception e)
+			{
+				System.out.println("select       "+e);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "\n ++ main try catch block ++ \n\n"+e);
+			System.out.println(e);
+		}
+		
+	}
+
+	public void choose() {
+		System.out.println("\n\n\n Press (1) to Paly a Specific Song");
+		System.out.println(" Press (2) to Play All Songs");
+		System.out.println(" Press (3) to Play Random Songs");
+		System.out.println(" Press (4) to Add New Song");
+		System.out.println(" Press (5) to Remove a Song");
+		System.out.println(" Press (6) to Update Song");
+		System.out.println(" Press (7) to Display All Song");
+		try {
+			a = sc.nextInt();
+			
+			switch(a)
+			{
+			case 1:{ a=0; call.Paly_a_Specific_Song();}
+			break;
+			case 2:{call.Play_All_Songs();}
+			break;
+			case 3:{a=0; call.Play_Random_Songs();}
+			break;
+			case 4:{call.Add_New_Song();}
+			break;
+			case 5:{call.Remove_a_Song();}
+			break;
+			case 6:{call.Update_Song();}
+			break;
+			case 7:{call.Play_All_Songs();}
+			break;
+			default:{
+				Registration obj=new Registration();
+				obj.choose();
+				System.out.println("Please Enter Correct Input");
+			}
+			
+			}
+			
+//		switch (a) {
+//				case 0: {
+//					
+//			        	}
+//					}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+}
+
+2) song facility
+
+package d;
+
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Properties;
+import java.util.Scanner;
+import javax.swing.JOptionPane;
+import java.lang.Math;
+
+public class song_properti  {
+
+	static Connection con;
+	static PreparedStatement pre;
+	static int rsi;
+	static ResultSet rs;
+	static String query;
+	static FileReader filereader;
+	static Properties properties = new Properties();
+	static Scanner sc = new Scanner(System.in);
+	static int a;
+	static song_properti obj=new song_properti();
+	static Registration call=new Registration();
+	
+	public void connect() {
+		try {
+			filereader = new FileReader("C:\\Users\\dhanuu\\eclipse-workspace\\WCCA11_JAVA\\d\\Path\\link.properties");
+			properties.load(filereader);
+			Class.forName(properties.getProperty("driver"));
+			con = DriverManager.getConnection(properties.getProperty("dbpath"), properties.getProperty("user"),
+					properties.getProperty("pass"));
+			JOptionPane.showMessageDialog(null, " connect database");
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Un-success to connect database");
+
+		}
+	}
+	public void Paly_a_Specific_Song() {
+		try {
+		obj.connect();
+		
+		query=properties.getProperty("choose_song");
+		pre=con.prepareStatement(query);
+		System.out.print("enter songID = ");
+		pre.setInt(1, sc.nextInt());
+    	rs=pre.executeQuery();
+		while(rs.next())
+		{
+			System.out.println("|"+rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3)+"|"+rs.getString(4)+"|"+rs.getString(5)+"|"+rs.getString(6)+"|");
+			a++;		}
+		System.out.println("Query ok ("+a+") rows affected");
+a=0;
+		call.choose();
+		
+	}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+	}
+
+	public void Play_All_Songs() {
+		try {
+		obj.connect();
+		query=properties.getProperty("select_all");
+		pre=con.prepareStatement(query);
+		rs=pre.executeQuery();
+		while(rs.next())
+		{
+			System.out.println("|"+rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3)+"|"+rs.getString(4)+"|"+rs.getString(5)+"|"+rs.getString(6)+"|");
+		a++;
+	
+		}
+		System.out.println("Query ok ("+a+") rows affected");
+		a=0;
+			
+		call.choose();
+		
+	}catch(Exception e)
+		{
+		System.out.println(e);
+		}
+		}
+
+	public void Play_Random_Songs() {
+		try {
+			obj.connect();
+			query="select * from song_0 where sid=?";
+			pre=con.prepareStatement(query);
+			pre.setInt(1, a=(int) Math.random()*(1-2+1)+1);
+			rs=pre.executeQuery();
+			while(rs.next())
+			{
+				a=0;
+				System.out.println("|"+rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3)+"|"+rs.getString(4)+"|"+rs.getString(5)+"|"+rs.getString(6)+"|");
+			a++;
+		
+			}
+			System.out.println("Query ok ("+a+") rows affected");
+			a=0;
+				System.out.println("If you Want to Play Other Song press (2) \n And For Exit (1)");
+				a=sc.nextInt();
+				if(a==2)
+				{
+					obj.Play_Random_Songs();
+				}
+				else {
+			call.choose();
+				}
+				a=0;
+		}catch(Exception e)
+			{
+			System.out.println(e);
+			}
+	}
+	public void Add_New_Song() {
+		try {
+			obj.connect();
+			System.out.println("Enter Number to How many Songs You Have to Add \n");
+			int add=sc.nextInt();
+			query=properties.getProperty("insert1");
+			try {				
+				for(int i=1;i<=add;i++)
+				{
+					System.out.println("Enter ("+i+") Number Song\n");
+					System.out.println("enter songid ");
+					pre=con.prepareStatement(query);
+					pre.setInt(1,sc.nextInt());
+					System.out.println("enter songname ");
+					pre.setString(2,sc.nextLine());//here i use one time user input (1)
+					pre.setString(2,sc.nextLine());//here i use two time user input (2)
+					System.out.println("enter singername ");
+					pre.setString(3,sc.nextLine());
+					System.out.println("enter moviename ");
+					pre.setString(4,sc.nextLine());
+					System.out.println("enter composername ");
+					pre.setString(5,sc.nextLine());
+					System.out.println("enter songlength ");
+					pre.setFloat(6,sc.nextFloat());
+					rsi=pre.executeUpdate();
+					System.out.println("query ok ("+rsi+") row affect");
+				}
+				call.choose();
+				}
+			catch(Exception e)
+			{
+				System.out.println(e);
+				obj.Add_New_Song();
+				System.out.println(e+"\n \n please enter again correct details ");
+			}
+		}catch(Exception e)
+			{
+			System.out.println(e);
+			}
+	}
+	public void Remove_a_Song() {
+		try {
+			obj.connect();
+			a=0;
+			query=properties.getProperty("one_song_del");
+			pre=con.prepareStatement(query);
+			System.out.println("Enter Song Id To Remove From List");
+			pre.setInt(1, sc.nextInt());
+			rsi=pre.executeUpdate();
+			System.out.println("query ok ("+1+") row affect"
+					+ "\n if you want to print all songs press (1) or no need to print press (2)");
+			a=0;
+			a=sc.nextInt();
+			if(a==1)
+			{a=0;
+				obj.Play_All_Songs();
+			}
+			else
+			{a=0;
+				call.choose();
+			}
+		}catch(Exception e)
+			{
+			System.out.println(e);
+			}
+	}
+	public void Update_Song() {
+		try {
+			
+			obj.connect();//  update song_0 set ?=? where ?=?;
+			System.out.println("If You Want To Update Song Fallow The Following Instructions \n"
+					         + "If You Know All Column Name it's fine \n"
+					         + "don't know Please press (9)\n\n"
+					         + "Note:- First Choose Column Name"
+					         + "       Then Set Valid Value \n\n"
+					         + "       Choose Column to set condition with valid value \n\n");
+
+			query=properties.getProperty("update_song");
+			pre=con.prepareStatement(query);
+			System.out.println("Enter Song_Id Value");
+			pre.setInt(2, sc.nextInt());
+			System.out.println("Enter Update Column Name");
+			pre.setString(3, sc.nextLine());
+			System.out.println("Enter Update Column Value");
+			pre.setString(4, sc.nextLine());
+			rsi=pre.executeUpdate(query);
+
+			System.out.println("Query Ok (1) row affect \n"
+					         + "Raws matched: (1) Changed: (1) Warning: (0)"
+					         + "\n if you want to print all songs press (1) or no need to print press (2)");
+
+			a=0;
+			a=sc.nextInt();
+			if(a==1)
+			{a=0;
+				obj.Play_All_Songs();
+			}
+			else
+			{a=0;
+				call.choose();
+			}
+			
+
+		}catch(Exception e)
+			{
+			System.out.println(e);
+			}
+	}
+	public void Display_All_Song() {
+		try {
+			obj.connect();
+		}catch(Exception e)
+			{
+			System.out.println(e);
+			}
+	}
+}
+
+3) songs database query
+
+driver=com.mysql.cj.jdbc.Driver
+dbpath=jdbc:mysql://localhost:3306/ch
+user=root
+pass=Chetan123@
+insert1=insert into song_0 values(?,?,?,?,?,?)
+delete_song=drop table song_0;
+create_database_of_song=create table song_0(sid int(3) primary key not null,songname varchar(30),singername varchar(30),moviename varchar(30),composer varchar(30),songlength float);
+choose_song=select * from song_0 where sid=?
+select_all=select * from song_0
+one_song_del=delete from song_0 where sid=?
+update_song=update song_0 set sid=? where ?=?;
